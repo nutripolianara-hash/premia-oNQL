@@ -1,0 +1,363 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans,sans-serif);background:var(--color-background-tertiary);padding:0 0 2rem;min-height:100vh}
+.wrap{max-width:640px;margin:0 auto}
+
+.cover{width:100%;aspect-ratio:3/1;object-fit:cover;display:block;border-radius:0 0 var(--border-radius-lg) var(--border-radius-lg);margin-bottom:0}
+
+.header{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:0 0 var(--border-radius-lg) var(--border-radius-lg);padding:1.75rem 1.5rem 1.5rem;margin-bottom:1.25rem;text-align:center}
+.stars{font-size:13px;letter-spacing:2px;margin-bottom:.5rem;background:linear-gradient(90deg,#9d8768,#e0d3c1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header h1{font-size:21px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem;line-height:1.3}
+.header h1 span{background:linear-gradient(90deg,#9d8768,#c4b49e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.header p{font-size:13px;color:var(--color-text-secondary);line-height:1.7;margin-top:.75rem}
+.badge-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+.badge{font-size:12px;padding:5px 14px;border-radius:99px;font-weight:500}
+.badge.b1{background:#f5efe8;color:#7a6347}
+.badge.b2{background:#f0e9df;color:#9d8768}
+.badge.b3{background:#ede6da;color:#6b5740}
+
+.progress-bar{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin:0 1rem 1.25rem}
+.progress-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+.progress-label{font-size:12px;color:var(--color-text-secondary)}
+.progress-pct{font-size:13px;font-weight:500;color:#9d8768}
+.bar-bg{height:8px;background:var(--color-background-secondary);border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#9d8768,#e0d3c1);border-radius:99px;transition:width .4s ease}
+.steps{display:flex;gap:4px;margin-top:.75rem}
+.step{flex:1;height:4px;border-radius:99px;background:var(--color-background-secondary);transition:background .3s}
+.step.done{background:#9d8768}
+.step.active{background:#c4b49e}
+
+.section{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.5rem;margin:0 1rem 1.25rem}
+.section-head{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;padding-bottom:.75rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.section-num{width:28px;height:28px;border-radius:50%;background:#f5efe8;color:#9d8768;font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.section-title{font-size:13px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em}
+
+.field{margin-bottom:1.25rem}
+.field:last-child{margin-bottom:0}
+label{display:block;font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+label .req{color:#9d8768;margin-left:2px}
+input,select{width:100%;padding:8px 12px;font-size:14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);outline:none;transition:border-color .15s}
+input:focus,select:focus{border-color:#9d8768;box-shadow:0 0 0 3px rgba(157,135,104,.1)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.input-prefix{position:relative}
+.input-prefix span{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--color-text-secondary)}
+.input-prefix input{padding-left:30px}
+.hint{font-size:12px;color:var(--color-text-tertiary);margin-top:5px;line-height:1.5}
+.error-msg{font-size:12px;color:var(--color-text-danger);margin-top:4px;display:none}
+input.err,select.err{border-color:var(--color-border-danger)}
+
+.upload-box{border:1px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);padding:1.25rem;text-align:center;cursor:pointer;transition:background .15s;position:relative}
+.upload-box:hover{background:var(--color-background-secondary)}
+.upload-box input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:22px;margin-bottom:.4rem}
+.upload-box p{font-size:13px;color:var(--color-text-secondary);margin-bottom:.2rem}
+.upload-box small{font-size:12px;color:var(--color-text-tertiary)}
+.file-list{margin-top:.75rem;display:flex;flex-direction:column;gap:6px}
+.file-item{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--color-text-secondary);background:var(--color-background-secondary);padding:6px 10px;border-radius:var(--border-radius-md)}
+.file-item span.fname{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-item button{background:none;border:none;cursor:pointer;color:var(--color-text-tertiary);font-size:14px;padding:0 2px;line-height:1}
+
+.alert{background:#f5efe8;border:0.5px solid #c4b49e;border-radius:var(--border-radius-md);padding:.875rem 1rem;font-size:13px;color:#7a6347;line-height:1.6;display:flex;gap:10px;align-items:flex-start}
+
+.score-preview{background:#f5efe8;border-radius:var(--border-radius-md);padding:.875rem 1rem;margin-top:.25rem;display:none}
+.score-preview .sp-label{font-size:12px;color:#9d8768;font-weight:500;margin-bottom:.4rem}
+.score-preview .sp-row{display:flex;gap:1rem;flex-wrap:wrap}
+.score-preview .sp-col .lbl{font-size:11px;color:#b09880}
+.score-preview .sp-col .val{font-size:18px;font-weight:500;color:#6b5740}
+.score-preview .sp-divider{border-left:0.5px solid #c4b49e;padding-left:1rem}
+.score-preview .sp-divider .val{font-size:20px;color:#9d8768}
+.score-preview .sp-hint{font-size:11px;color:#b09880;margin-top:.4rem}
+
+.submit-wrap{padding:0 1rem}
+.submit-btn{width:100%;padding:15px;font-size:15px;font-weight:500;color:#fff;background:linear-gradient(90deg,#9d8768,#c4b49e);border:none;border-radius:var(--border-radius-lg);cursor:pointer;transition:opacity .15s;margin-bottom:.75rem;display:flex;align-items:center;justify-content:center;gap:8px}
+.submit-btn:hover{opacity:.9}
+.submit-btn:active{transform:scale(.99)}
+.submit-btn:disabled{opacity:.5;cursor:not-allowed}
+.footer-msg{text-align:center;font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+
+.success{display:none;text-align:center;padding:1rem}
+.success.show{display:block}
+.confetti-row{font-size:28px;letter-spacing:4px;margin-bottom:1rem}
+.success-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:2.5rem 1.5rem;margin-bottom:1rem}
+.xp-badge{display:inline-flex;align-items:center;gap:6px;background:#f5efe8;color:#9d8768;border-radius:99px;padding:6px 18px;font-size:13px;font-weight:500;margin:1rem 0}
+.form-wrap.hide{display:none}
+</style>
+
+<div class="wrap">
+<div class="form-wrap" id="formWrap">
+
+  <img class="cover" src="data:image/jpeg;base64,COVER_BASE64_PLACEHOLDER" id="coverImg" alt="Registro Mensal – Nutri que Lucra" onerror="this.style.display='none'">
+
+  <div class="header">
+    <div class="stars">★ ★ ★ ★ ★</div>
+    <h1>Envio de resultados –<br><span>Nutri que Lucra</span> – Premiações</h1>
+    <p>Preencha seus dados de desempenho mensal e entre na disputa pelo <strong>ranking</strong>. Há premiação todo mês e uma grande premiação anual para quem se destacar ao longo do ano!</p>
+    <div class="badge-row">
+      <span class="badge b1">Ranking mensal</span>
+      <span class="badge b2">Premiação mensal</span>
+      <span class="badge b3">Premiação anual</span>
+    </div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-header">
+      <span class="progress-label">Seu progresso no formulário</span>
+      <span class="progress-pct" id="pct">0% preenchido</span>
+    </div>
+    <div class="bar-bg"><div class="bar-fill" id="barFill"></div></div>
+    <div class="steps">
+      <div class="step" id="s1"></div>
+      <div class="step" id="s2"></div>
+      <div class="step" id="s3"></div>
+    </div>
+  </div>
+
+  <form id="mainForm" novalidate>
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-num">1</div>
+        <div class="section-title">Dados pessoais</div>
+      </div>
+      <div class="field">
+        <label>Nome completo <span class="req">*</span></label>
+        <input type="text" id="nome" placeholder="Seu nome completo">
+        <div class="error-msg" id="err-nome">Por favor, informe seu nome completo.</div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>WhatsApp <span class="req">*</span></label>
+          <input type="tel" id="whatsapp" placeholder="(11) 99999-9999" maxlength="15">
+          <div class="error-msg" id="err-whatsapp">WhatsApp inválido.</div>
+        </div>
+        <div class="field">
+          <label>E-mail <span class="req">*</span></label>
+          <input type="email" id="email" placeholder="seu@email.com">
+          <div class="error-msg" id="err-email">E-mail inválido.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-num">2</div>
+        <div class="section-title">Dados de desempenho</div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Mês de referência <span class="req">*</span></label>
+          <select id="mes">
+            <option value="">Selecione...</option>
+            <option>Janeiro</option><option>Fevereiro</option><option>Março</option>
+            <option>Abril</option><option>Maio</option><option>Junho</option>
+            <option>Julho</option><option>Agosto</option><option>Setembro</option>
+            <option>Outubro</option><option>Novembro</option><option>Dezembro</option>
+          </select>
+          <div class="error-msg" id="err-mes">Selecione o mês.</div>
+        </div>
+        <div class="field">
+          <label>Ano de referência <span class="req">*</span></label>
+          <input type="number" id="ano" placeholder="Ex: 2025" min="2020" max="2099">
+          <div class="error-msg" id="err-ano">Informe o ano.</div>
+        </div>
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label>Pacientes ativos <span class="req">*</span></label>
+          <input type="number" id="pacientes" placeholder="Ex: 42" min="0">
+          <div class="hint">Total de pacientes no mês.</div>
+          <div class="error-msg" id="err-pacientes">Informe a quantidade.</div>
+        </div>
+        <div class="field">
+          <label>Faturamento mensal <span class="req">*</span></label>
+          <div class="input-prefix">
+            <span>R$</span>
+            <input type="text" id="faturamento" placeholder="0,00" inputmode="decimal">
+          </div>
+          <div class="hint">Total do mês de referência.</div>
+          <div class="error-msg" id="err-faturamento">Informe o faturamento.</div>
+        </div>
+      </div>
+
+      <div class="score-preview" id="scorePreview">
+        <div class="sp-label">Sua estimativa de pontuação</div>
+        <div class="sp-row">
+          <div class="sp-col"><div class="lbl">Pacientes</div><div class="val" id="ptsPac">–</div></div>
+          <div class="sp-col"><div class="lbl">Faturamento</div><div class="val" id="ptsFat">–</div></div>
+          <div class="sp-col sp-divider"><div class="lbl">Total estimado</div><div class="val" id="ptsTotal">–</div></div>
+        </div>
+        <div class="sp-hint">Pontuação estimada com base nos seus dados. A posição final depende de todas as participantes.</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-num">3</div>
+        <div class="section-title">Comprovação de resultados</div>
+      </div>
+      <div class="field">
+        <label>Anexar comprovantes <span class="req">*</span></label>
+        <div class="upload-box">
+          <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png">
+          <div class="upload-icon">📎</div>
+          <p>Clique para selecionar ou arraste os arquivos aqui</p>
+          <small>PDF, JPG e PNG • Múltiplos arquivos permitidos</small>
+        </div>
+        <div class="file-list" id="fileList"></div>
+        <div class="hint" style="margin-top:8px">Anexe todos os comprovantes de vendas e atendimentos do mês informado. Envios sem comprovação podem não ser considerados para o ranking.</div>
+        <div class="error-msg" id="err-files">Anexe pelo menos um comprovante.</div>
+      </div>
+      <div class="alert">
+        <span style="font-size:16px;flex-shrink:0;margin-top:1px">⚠</span>
+        <span>O envio correto e completo é obrigatório para participação na premiação. Dados incompletos ou sem comprovação não serão considerados.</span>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <span id="btnText">Enviar meus resultados e entrar no ranking</span>
+        <span style="font-size:18px">🚀</span>
+      </button>
+      <p class="footer-msg">Boa sorte! Seu resultado pode te colocar no topo do ranking deste mês.</p>
+    </div>
+  </form>
+</div>
+
+<div class="success" id="successBox">
+  <div class="confetti-row">🎉🏆🎊</div>
+  <div class="success-card">
+    <h2 style="font-size:20px;font-weight:500;margin-bottom:.5rem;color:var(--color-text-primary)">Resultados enviados!</h2>
+    <p style="font-size:14px;color:var(--color-text-secondary);line-height:1.7">Você está na disputa pelo ranking deste mês. Acompanhe os resultados e torça pela sua posição!</p>
+    <div class="xp-badge">+100 XP · Participação confirmada</div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:.5rem">
+      <span class="badge b1">Envio completo</span>
+      <span class="badge b2">Elegível para premiação</span>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+(function(){
+  const img=document.getElementById('coverImg');
+  const src='COVER_SRC';
+  if(src&&src!=='COVER_SRC')img.src=src;
+  else img.style.display='none';
+})();
+
+const files=[];
+const fi=document.getElementById('fileInput');
+const fl=document.getElementById('fileList');
+
+fi.addEventListener('change',()=>{
+  [...fi.files].forEach(f=>{if(!files.find(x=>x.name===f.name&&x.size===f.size))files.push(f);});
+  renderFiles();updateProgress();fi.value='';
+});
+
+function renderFiles(){
+  fl.innerHTML='';
+  files.forEach((f,i)=>{
+    const ext=f.name.split('.').pop().toUpperCase();
+    const kb=(f.size/1024).toFixed(0);
+    const d=document.createElement('div');d.className='file-item';
+    d.innerHTML=`<span style="font-weight:500;color:#9d8768;flex-shrink:0">${ext}</span><span class="fname">${f.name}</span><span style="flex-shrink:0;color:var(--color-text-tertiary)">${kb}kb</span><button onclick="removeFile(${i})" title="Remover">✕</button>`;
+    fl.appendChild(d);
+  });
+}
+function removeFile(i){files.splice(i,1);renderFiles();updateProgress();}
+
+const fmt=document.getElementById('faturamento');
+fmt.addEventListener('input',function(){
+  let v=this.value.replace(/\D/g,'');
+  if(!v){this.value='';updateScore();return;}
+  v=(parseInt(v)/100).toFixed(2);
+  this.value=parseFloat(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+  updateScore();updateProgress();
+});
+
+const wpp=document.getElementById('whatsapp');
+wpp.addEventListener('input',function(){
+  let v=this.value.replace(/\D/g,'');
+  if(v.length<=2)v=v.replace(/(\d{0,2})/,'($1');
+  else if(v.length<=7)v=v.replace(/(\d{2})(\d+)/,'($1) $2');
+  else if(v.length<=11)v=v.replace(/(\d{2})(\d{5})(\d+)/,'($1) $2-$3');
+  else v=v.replace(/(\d{2})(\d{5})(\d{4}).*/,'($1) $2-$3');
+  this.value=v;updateProgress();
+});
+
+document.getElementById('pacientes').addEventListener('input',()=>{updateScore();updateProgress();});
+['nome','email','mes','ano'].forEach(id=>document.getElementById(id).addEventListener('input',updateProgress));
+
+function updateScore(){
+  const pac=parseInt(document.getElementById('pacientes').value)||0;
+  const fatStr=document.getElementById('faturamento').value.replace(/\./g,'').replace(',','.');
+  const fat=parseFloat(fatStr)||0;
+  const sp=document.getElementById('scorePreview');
+  if(!pac&&!fat){sp.style.display='none';return;}
+  const pp=pac*10,pf=Math.round(fat/100),tot=pp+pf;
+  document.getElementById('ptsPac').textContent=pp.toLocaleString('pt-BR')+' pts';
+  document.getElementById('ptsFat').textContent=pf.toLocaleString('pt-BR')+' pts';
+  document.getElementById('ptsTotal').textContent=tot.toLocaleString('pt-BR')+' pts';
+  sp.style.display='block';
+}
+
+function updateProgress(){
+  const fields=[
+    document.getElementById('nome').value.trim(),
+    document.getElementById('whatsapp').value.trim(),
+    document.getElementById('email').value.trim(),
+    document.getElementById('mes').value,
+    document.getElementById('ano').value.trim(),
+    document.getElementById('pacientes').value.trim(),
+    document.getElementById('faturamento').value.trim(),
+    files.length?'x':''
+  ];
+  const filled=fields.filter(v=>v!=='').length;
+  const pct=Math.round((filled/fields.length)*100);
+  document.getElementById('barFill').style.width=pct+'%';
+  document.getElementById('pct').textContent=pct+'% preenchido';
+  const s1=fields.slice(0,3).filter(v=>v).length;
+  const s2=fields.slice(3,7).filter(v=>v).length;
+  const s3=fields[7]?1:0;
+  const setStep=(id,done,active)=>{const el=document.getElementById(id);el.className='step'+(done?' done':active?' active':'');};
+  setStep('s1',s1===3,s1>0&&s1<3);
+  setStep('s2',s2===4,s2>0&&s2<4);
+  setStep('s3',s3===1,false);
+}
+
+function showErr(id,show){
+  const el=document.getElementById('err-'+id);
+  const inp=document.getElementById(id);
+  if(el)el.style.display=show?'block':'none';
+  if(inp){show?inp.classList.add('err'):inp.classList.remove('err');}
+}
+
+document.getElementById('mainForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  let ok=true;
+  const checks={
+    nome:v=>v.trim().length>0,
+    whatsapp:v=>v.trim().length>=13,
+    email:v=>v.includes('@'),
+    mes:v=>v!=='',
+    ano:v=>v.trim().length>=4,
+    pacientes:v=>v.trim().length>0&&parseInt(v)>=0,
+    faturamento:v=>v.trim().length>0
+  };
+  Object.entries(checks).forEach(([id,fn])=>{
+    const val=document.getElementById(id).value;
+    const valid=fn(val);
+    showErr(id,!valid);
+    if(!valid)ok=false;
+  });
+  if(!files.length){showErr('files',true);ok=false;}else showErr('files',false);
+  if(!ok)return;
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true;
+  document.getElementById('btnText').textContent='Enviando...';
+  setTimeout(()=>{
+    document.getElementById('formWrap').classList.add('hide');
+    document.getElementById('successBox').classList.add('show');
+  },1200);
+});
+</script>

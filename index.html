@@ -238,6 +238,12 @@ input.err,select.err{border-color:var(--color-border-danger)}
 </div>
 
 <script>
+// ============================================================
+// ⚠️ SUBSTITUA A URL ABAIXO PELA URL DO SEU APPS SCRIPT ⚠️
+// ============================================================
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyhZmUtlgEA7jwoN7npTqesmB8y8eHpb_NfKF4MVeP1ENT2OMrqj6tKl1XnH0lL8CHb/exec';
+// ============================================================
+
 (function(){
   const img=document.getElementById('coverImg');
   const src='COVER_SRC';
@@ -352,12 +358,43 @@ document.getElementById('mainForm').addEventListener('submit',function(e){
   });
   if(!files.length){showErr('files',true);ok=false;}else showErr('files',false);
   if(!ok)return;
+
   const btn=document.getElementById('submitBtn');
   btn.disabled=true;
   document.getElementById('btnText').textContent='Enviando...';
-  setTimeout(()=>{
-    document.getElementById('formWrap').classList.add('hide');
-    document.getElementById('successBox').classList.add('show');
-  },1200);
+
+  // Monta os nomes dos arquivos para registrar na planilha
+  const nomeArquivos = files.map(f => f.name).join(', ');
+
+  const formData = new FormData();
+  formData.append('nome',        document.getElementById('nome').value);
+  formData.append('whatsapp',    document.getElementById('whatsapp').value);
+  formData.append('email',       document.getElementById('email').value);
+  formData.append('mes',         document.getElementById('mes').value);
+  formData.append('ano',         document.getElementById('ano').value);
+  formData.append('pacientes',   document.getElementById('pacientes').value);
+  formData.append('faturamento', document.getElementById('faturamento').value);
+  formData.append('comprovante', nomeArquivos);
+
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    if(data.status === 'ok'){
+      document.getElementById('formWrap').classList.add('hide');
+      document.getElementById('successBox').classList.add('show');
+    } else {
+      alert('Erro ao enviar. Tente novamente.');
+      btn.disabled=false;
+      document.getElementById('btnText').textContent='Enviar meus resultados e entrar no ranking';
+    }
+  })
+  .catch(()=>{
+    alert('Erro de conexão. Verifique sua internet e tente novamente.');
+    btn.disabled=false;
+    document.getElementById('btnText').textContent='Enviar meus resultados e entrar no ranking';
+  });
 });
 </script>
